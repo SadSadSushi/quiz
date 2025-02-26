@@ -1,51 +1,88 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #121212;
-    color: white;
+    background-color: white;
+    color: black;
+    margin: 0;
+    padding: 20px;
 }
 .quiz-container {
     width: 60%;
     margin: auto;
-    background: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    text-align: left;
 }
 h1 {
-    font-size: 24px;
+    font-size: 28px;
+    margin-bottom: 20px;
 }
 .question {
     margin-bottom: 20px;
 }
 .answer {
     display: block;
-    background-color: #2c2c2c;
     padding: 15px;
-    margin: 10px 0;
+    margin: 5px 0;
+    background-color: #f1f1f1;
     border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
-    font-size: 18px;
-    border: 2px solid transparent;
+    transition: background 0.3s, transform 0.2s;
 }
 .answer:hover {
-    background-color: #ff4757;
+    background-color: #e35658;
+    transform: scale(1.02);
 }
 .answer.selected {
-    background-color: #e84118;
-    border: 2px solid white;
+    background-color: #ffa9c9;
+    font-weight: bold;
+}
+#progress-container {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #ffa9c9;
+    transition: width 0.3s;
 }
 button {
-    background-color: #ff4757;
-    color: white;
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 18px;
     border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
+    background-color: #DD4346;
+    color: white;
     border-radius: 5px;
-    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 button:hover {
-    background-color: #e84118;
+    background-color: #FC5356;
+}
+#result {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-left: 5px solid #DD4346;
+}
+#result h2 {
+    margin: 0;
+    font-size: 24px;
+}
+#result a {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+}
+#result button {
+    width: auto;
+    background-color: #d43318;
+}
+#result button:hover {
+    background-color: #168f40;
 }

@@ -1,6 +1,7 @@
 const quizContainer = document.getElementById("quiz");
 const submitButton = document.getElementById("submit");
 const resultContainer = document.getElementById("result");
+const progressBar = document.getElementById("progress-bar");
 const questions = [
     {
         question: "What do you value most in music?",
@@ -34,7 +35,7 @@ const questions = [
     }
 ];
 let userAnswers = { pop: 0, hiphop: 0, jazz: 0, rock: 0 };
-// Render quiz questions with clickable answer boxes
+let selectedAnswers = 0;
 function displayQuiz() {
     questions.forEach((q, index) => {
         const questionDiv = document.createElement("div");
@@ -46,28 +47,29 @@ function displayQuiz() {
             answerDiv.textContent = value;
             answerDiv.dataset.genre = q.genreScores[key];
             answerDiv.dataset.questionIndex = index;
-            // Click event for selecting an answer
-            answerDiv.addEventListener("click", function () {
-                // Deselect all answers in the same question
-                document.querySelectorAll(`.answer[data-question-index="${index}"]`).forEach(el => {
-                    el.classList.remove("selected");
-                });
-                // Select the clicked answer
-                this.classList.add("selected");
-            });
+            answerDiv.addEventListener("click", () => selectAnswer(answerDiv, index));
             questionDiv.appendChild(answerDiv);
         });
         quizContainer.appendChild(questionDiv);
     });
 }
-displayQuiz();
-// Calculate results
+function selectAnswer(answerDiv, questionIndex) {
+    const previousSelected = document.querySelector(`.answer.selected[data-question-index="${questionIndex}"]`);
+    if (previousSelected) previousSelected.classList.remove("selected");
+    answerDiv.classList.add("selected");
+    userAnswers[answerDiv.dataset.genre]++;
+    updateProgressBar();
+}
+function updateProgressBar() {
+    selectedAnswers = document.querySelectorAll(".answer.selected").length;
+    const progress = (selectedAnswers / questions.length) * 100;
+    progressBar.style.width = `${progress}%`;
+}
 submitButton.addEventListener("click", () => {
-    userAnswers = { pop: 0, hiphop: 0, jazz: 0, rock: 0 }; // Reset scores
-    const selectedAnswers = document.querySelectorAll(".answer.selected");
-    selectedAnswers.forEach(answer => {
-        userAnswers[answer.dataset.genre]++;
-    });
+    if (selectedAnswers < questions.length) {
+        alert("Please answer all the questions before seeing your result!");
+        return;
+    }
     const result = Object.keys(userAnswers).reduce((a, b) => userAnswers[a] > userAnswers[b] ? a : b);
     const genreDescriptions = {
         pop: "You're fun, social, and love a good hit song. Pop music is all about catchy tunes and good vibes!",
@@ -75,5 +77,16 @@ submitButton.addEventListener("click", () => {
         jazz: "You're deep, artistic, and appreciate complexity. Jazz is all about improvisation and feeling the music.",
         rock: "You're rebellious, passionate, and love raw emotion. Rock music is all about powerful chords and intense performances!"
     };
-    resultContainer.innerHTML = `<h2>Your Music Genre: ${result.toUpperCase()}</h2><p>${genreDescriptions[result]}</p>`;
+    const spotifyEmbeds = {
+        pop: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M" width="100%" height="380" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`,
+        hiphop: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd" width="100%" height="380" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`,
+        jazz: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXbITWG1ZJKYt" width="100%" height="380" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`,
+        rock: `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWXRqgorJj26U" width="100%" height="380" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`
+    };
+    resultContainer.innerHTML = `
+        <h2>Your Music Genre: ${result.toUpperCase()}</h2>
+        <p>${genreDescriptions[result]}</p>
+        ${spotifyEmbeds[result]}
+    `;
 });
+displayQuiz();
